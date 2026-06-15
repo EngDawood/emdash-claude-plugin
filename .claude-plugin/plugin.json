@@ -1,0 +1,10 @@
+{
+  "name": "emdash",
+  "version": "0.1.0",
+  "description": "Claude Code skills for building, debugging, and deploying EmDash CMS sites on Astro + Cloudflare.",
+  "author": {
+    "name": "EngDawood",
+    "url": "https://engdawood.com"
+  },
+  "keywords": ["emdash", "astro", "cloudflare", "cms"]
+}
