@@ -1,8 +1,16 @@
 {
   "mcpServers": {
     "emdash-docs": {
-      "type": "sse",
+      "type": "http",
       "url": "https://docs.emdashcms.com/mcp"
+    },
+    "Astro docs": {
+      "type": "http",
+      "url": "https://mcp.docs.astro.build/mcp"
+    },
+    "emdash-admin-local": {
+      "type": "http",
+      "url": "http://localhost:4322/_emdash/api/mcp"
     }
   }
 }
