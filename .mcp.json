@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "emdash-docs": {
+      "type": "sse",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
+  }
+}
