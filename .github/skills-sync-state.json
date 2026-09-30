@@ -1,0 +1,13 @@
+{
+  "upstreamRepo": "emdash-cms/emdash",
+  "upstreamBranch": "main",
+  "upstreamSha": "120d1607c97c58b1d10ab592dcc8e47bbbe568cc",
+  "syncedSkills": [
+    "adversarial-reviewer",
+    "agent-browser",
+    "building-emdash-site",
+    "creating-plugins",
+    "emdash-cli",
+    "wordpress-plugin-to-emdash"
+  ]
+}

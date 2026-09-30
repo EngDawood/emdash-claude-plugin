@@ -1,0 +1,21 @@
+{
+  "upstream": {
+    "repo": "emdash-cms/emdash",
+    "branch": "main",
+    "path": "skills"
+  },
+  "sync": [
+    "adversarial-reviewer",
+    "agent-browser",
+    "building-emdash-site",
+    "creating-plugins",
+    "emdash-cli",
+    "wordpress-plugin-to-emdash"
+  ],
+  "excluded": {
+    "wordpress-theme-to-emdash": "Local variant: 6-phase flow with scaffold/ starter and extra references. Managed manually, never mirrored.",
+    "emdash-github-actions": "Plugin-specific CI/CD skill. Does not exist upstream.",
+    "ux-acceptance-coordinator": "Internal to the emdash repo (UX acceptance testing). Not relevant to plugin users.",
+    "writing-emdash-docs": "Internal to the emdash repo (site docs writing). Not relevant to plugin users."
+  }
+}
