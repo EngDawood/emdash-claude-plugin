@@ -8,6 +8,9 @@ This is a Claude Code plugin for EmDash CMS sites -- a collection of skills and 
 | `skills/<name>/SKILL.md` | Skill entry point (auto-discovered) |
 | `skills/<name>/references/` | Supporting docs for the skill |
 | `agents/<name>.md` | Investigation pipeline agents |
+| `.github/skills-sync.json` | Which skills are mirrored from `emdash-cms/emdash` (and which are excluded) |
+| `scripts/sync-skills.sh` | Mirror + validation logic for the skill sync workflow |
+| `.github/skills-sync-state.json` | Last synced upstream commit (managed by the workflow) |
 
 ## Skills
 
@@ -42,3 +45,4 @@ Call `search_docs` to verify any EmDash API, hook, config option, or field type 
 - Each skill lives in its own subdirectory; supporting docs go in `references/`.
 - Agents are single `.md` files in `agents/`.
 - No build step -- edit `SKILL.md` or reference docs directly.
+- Do NOT manually edit skills in the `sync` list of `.github/skills-sync.json` -- the sync workflow overwrites them from `emdash-cms/emdash`. Local tweaks belong in excluded skills or upstream.

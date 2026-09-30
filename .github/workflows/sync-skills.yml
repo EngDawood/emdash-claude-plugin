@@ -1,0 +1,81 @@
+# Mirrors selected skills from emdash-cms/emdash (main branch, skills/ path)
+# into this plugin's skills/ directory and pushes the result to main.
+#
+# - Which skills are mirrored / excluded is configured in .github/skills-sync.json
+# - Runs daily, or manually via Actions -> "Sync skills" -> Run workflow
+# - Last synced upstream commit is tracked in .github/skills-sync-state.json,
+#   so runs where upstream has not moved exit in seconds without committing.
+name: Sync skills
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-sync even if the upstream commit is unchanged"
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Daily at 06:23 UTC (09:23 Asia/Riyadh)
+    - cron: "23 6 * * *"
+
+# Never run two syncs at the same time; a new run waits for the old one.
+concurrency:
+  group: sync-skills
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync skills from emdash-cms/emdash
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this plugin
+        uses: actions/checkout@v4
+
+      - name: Checkout upstream skills/ (emdash-cms/emdash)
+        uses: actions/checkout@v4
+        with:
+          repository: emdash-cms/emdash
+          ref: main
+          path: .upstream
+          sparse-checkout: skills
+          fetch-depth: 1
+
+      - name: Run sync
+        env:
+          FORCE: ${{ inputs.force || false }}
+        run: |
+          UPSTREAM_SHA="$(git -C .upstream rev-parse HEAD)"
+          force_args=()
+          if [ "$FORCE" = "true" ]; then force_args+=(--force); fi
+          bash scripts/sync-skills.sh \
+            --config .github/skills-sync.json \
+            --upstream .upstream/skills \
+            --dest skills \
+            --state .github/skills-sync-state.json \
+            --sha "$UPSTREAM_SHA" \
+            "${force_args[@]}"
+
+      - name: Commit and push
+        run: |
+          if [ -n "$(git status --porcelain -- skills .github/skills-sync-state.json)" ]; then
+            SHORT_SHA="$(git -C .upstream rev-parse --short=7 HEAD)"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add skills .github/skills-sync-state.json
+            git commit -m "chore(skills): sync from emdash-cms/emdash@${SHORT_SHA}"
+            git push
+            {
+              echo "## ✅ Skills synced"
+              echo
+              echo "Mirrored from \`emdash-cms/emdash\` main @ \`${SHORT_SHA}\`."
+              echo
+              git show --stat --format="" HEAD
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Skills are up to date — nothing to commit."
+            echo "## Skills up to date" >> "$GITHUB_STEP_SUMMARY"
+          fi
